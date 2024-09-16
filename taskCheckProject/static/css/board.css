@@ -1,0 +1,99 @@
+/* 전체 컨테이너 스타일 */
+.container {
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    justify-content: space-between;
+    padding: 20px;
+}
+
+/* 메인 콘텐츠 */
+.content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+/* 방 정보 섹션 */
+.room-info {
+    text-align: center;
+    padding: 10px;
+    border-bottom: 1px solid #ccc;
+}
+
+/* 스토리 섹션 (원형 이미지들) */
+.story {
+    display: flex;
+    justify-content: start;
+    overflow-x: auto;
+    padding: 10px;
+    background-color: #eef2f5;
+    white-space: nowrap;
+    margin: 10px 0;
+}
+
+/* 스토리 원형 프로필 */
+.story-profile {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    margin-right: 10px;
+    border: 2px solid #ccc;
+    overflow: hidden;
+    cursor: pointer;
+    display: inline-block;
+    position: relative;
+}
+
+.story-profile img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+/* 팝업 창 */
+.popup {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.7);
+}
+
+.popup-content {
+    display: block;
+    margin: 15% auto;
+    width: 50%;
+    max-width: 300px;
+    border-radius: 5px;
+}
+
+.close {
+    position: absolute;
+    top: 10px;
+    right: 25px;
+    color: white;
+    font-size: 30px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+/* 보드게임 섹션 */
+.game-board {
+    flex: 1;
+    padding: 20px;
+    text-align: center;
+    border: 1px solid #ccc;
+}
+
+/* 하단 네비게이션 바 */
+.footer-nav {
+    text-align: center;
+    padding: 15px;
+    border-top: 1px solid #ccc;
+    font-size: 18px;
+}

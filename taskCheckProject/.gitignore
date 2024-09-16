@@ -1,0 +1,16 @@
+# .gitignore
+# 가상머신 
+myvenv/
+
+# byte-compiled files
+__pychache__/
+*.py[cod]
+
+# django migrations
+*/migrations/
+
+# Database files
+*.sqlite3
+
+# VScode settings
+.vscode/

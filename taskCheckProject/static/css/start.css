@@ -1,0 +1,23 @@
+/* 회원가입 완료 메시지 스타일 */
+.content h2 {
+    color: #333;
+    margin-bottom: 30px;
+    font-size: 24px;
+}
+
+/* 로그인 버튼 스타일 */
+.login-button {
+    width: 100%;
+    padding: 12px;
+    border: none;
+    border-radius: 20px;
+    background-color: #007bff;
+    color: white;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.login-button:hover {
+    background-color: #0056b3;
+}

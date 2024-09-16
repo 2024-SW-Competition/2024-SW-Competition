@@ -1,0 +1,49 @@
+<!--보드게임 화면-->
+{% load static %} <!-- 정적 파일 쓸 때는 이 한 줄 맨 위에 추가해야돼-->
+
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>체크마블</title>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}"> 
+    <link rel="stylesheet" href="{% static 'css/board.css' %}"> 
+</head>
+<body>
+    <div class="container">
+        <div class="content">
+            <div class="room-info">
+                <h1>구현 필요
+            </div>
+            <div class="story">
+                <div class="story-profile" onClick="showStory(this)">
+                    <img src= "{% static 'images/rat.png' %}" alt="Default Image">
+                    <!--<img src="{% static 'images/{{ user.character }}.png' %}" alt="character image" class="profile-img">-->
+                    <button class="upload-btn">+</button> <!-- 작은 업로드 버튼 추가 -->
+                </div>
+                <div id="upload-form">
+                    <span class="close-btn" onClick="closeForm()">&times;</span>
+                    <form method="POST" enctype="multipart/form-data" action="{% url 'upload_image' %}">
+                        {% csrf_token %}
+                        <label for="image">캐릭터 이미지 업로드:</label>
+                        <input type="file" id="image" name="image" accept="image/*" required>
+                        <button type="submit">업로드</button>
+                    </form>
+                </div>
+                <div id="story-popup" class="popup" onclick="closePopup()">
+                    <span class="close">&times;</span>
+                    <img class="popup-content" id="popup-img">
+                </div>
+            </div>
+            <div class="game-board">
+                <h1>보드게임 화면</h1>
+            </div>
+            <div class="footer-nav">
+                <h1>하단 네비게이션 바. 구현 필요</h1>
+            </div>
+        </div>
+    </div>
+    <script src="{% static 'js/board.js' %}"></script>
+</body>
+</html>

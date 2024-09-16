@@ -1,0 +1,43 @@
+/* 전체 페이지의 기본 설정 */
+body {
+    margin: 0;
+    padding: 0;
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: black; /* 페이지의 기본 배경색을 검정으로 설정 */
+}
+
+/* 고정된 크기의 컨테이너 */
+.container {
+    width: 375px; /* 스마트폰 크기에 고정된 너비 */
+    height: 667px; /* 고정된 높이 */
+
+    background-color: white; /* 콘텐츠 영역의 배경색을 흰색으로 설정 */
+    overflow: auto; /* 초과 콘텐츠 숨기기 */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* 콘텐츠 스타일 */
+.content {
+    text-align: center;
+    padding: 20px; /* 스크롤을 확인하기 위해 약간의 여백 추가 */
+}
+
+/* 스크롤바 스타일 (Webkit 기반 브라우저용) */
+.container::-webkit-scrollbar {
+    width: 13px; /* 스크롤바 너비 */
+}
+
+.container::-webkit-scrollbar-thumb {
+    background-color: blue; /* 스크롤바 색상을 핑크색으로 설정 */
+    border-radius: 10px; /* 스크롤바를 둥글게 만들기 위해 반지름 설정 */
+}
+
+.container::-webkit-scrollbar-track {
+    background: transparent; /* 스크롤바 트랙 배경을 투명하게 설정 */
+}
