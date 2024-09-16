@@ -1,0 +1,53 @@
+{% load static %}
+
+<!-- 임시 팀 상세페이지  -->
+
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>체크마블</title>
+    <link rel="stylesheet" href="{% static 'css/team_detail.css' %}">
+</head>
+<body>
+    <div class="container">
+        <div class="content">
+            <div class="team-detail">
+                <!-- 홈으로 돌아가는 화살표 버튼 -->
+                <a href="{% url 'accounts:home' %}" class="back-button" ><b><</b></a>
+
+                <!-- 팀 정보 -->
+                <h2 class="team-name">{{ team.name }}</h2>
+                <p class="team-goal">목표: {{ team.goal }}</p>
+                <p class="team-duration">기간: {{ team.duration }}일</p>
+                {% for profile in team_members_profiles %}
+                    <li>
+                        <!-- 팀원의 이름 표시 -->
+                        {{ profile.member.username }}
+
+                        <!-- 팀원들의 캐릭터 이미지 표시 -->
+                        {% if profile.character_image %}
+                            <img src="{% static 'img/'|add:profile.character_image %}" alt="{{ profile.member.username }}의 캐릭터" width="100px">
+                        {% else %}
+                            <p>캐릭터 이미지 없음</p>
+                        {% endif %}
+                    </li>
+                {% empty %}
+                    <li>팀원 없음</li>
+                {% endfor %}
+
+                <!-- 팀원 목록 -->
+                <h3>팀원 목록</h3>
+                <ul class="team-members">
+                    {% for member in team.members.all %}
+                        <li>{{ member.username }}</li>
+                    {% empty %}
+                        <li>팀원 없음</li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

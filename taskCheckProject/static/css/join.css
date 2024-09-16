@@ -12,7 +12,7 @@
     border: 1px solid #ddd;
     border-radius: 5px;
     font-size: 16px;
-    box-sizing: border-box; /* 패딩을 포함한 너비 계산 */
+    box-sizing: border-box;
 }
 
 .register-form input:focus {
