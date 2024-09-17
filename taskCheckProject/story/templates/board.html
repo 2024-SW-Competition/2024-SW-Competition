@@ -17,6 +17,12 @@
                 <h1>구현 필요
             </div>
             <div class="story">
+                <form method="POST" action="{% url 'story_view' %}">
+                    {% csrf_token %}
+                    <input type="hidden" name="room_id" value="{{ room_id }}">
+                    <button type="submit">Submit</button>
+                </form>
+                
                 <div class="story-profile" onClick="showStory(this)">
                     <img src= "{% static 'images/rat.png' %}" alt="Default Image">
                     <!--<img src="{% static 'images/{{ user.character }}.png' %}" alt="character image" class="profile-img">-->

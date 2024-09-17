@@ -14,7 +14,6 @@ body {
 .container {
     width: 375px; /* 스마트폰 크기에 고정된 너비 */
     height: 667px; /* 고정된 높이 */
-
     background-color: white; /* 콘텐츠 영역의 배경색을 흰색으로 설정 */
     overflow: auto; /* 초과 콘텐츠 숨기기 */
     display: flex;
