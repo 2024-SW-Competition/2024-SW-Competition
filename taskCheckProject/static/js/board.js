@@ -1,21 +1,27 @@
 /* 보드게임판 js */
 /* story 부분 */
 function showStory(element){
-    var uploadImage = element.querySelector('img').getAttribute('src');
     var popup = document.getElementById("story-popup");
     var popupImg = document.getElementById("popup-img");
 
-    popupImg.src = uploadedImage;
-    popup.style.display = "block";
+    var uploadImage = "{{ upload_img }}";
+
+    if (uploadImage) {
+        popupImg.src = uploadImage;
+    }else{
+        var characterImage = element.querySelector('img').getAttribute('src');
+        popupImg.src = characterImage;  // Display the character image instead
+    }
+    popup.style.display = "block";  // Open the popup
 }
 function closePopUp(){
     var popup = document.getElementById("story-popup");
     popup.style.display = "none";
 }
-function openForm() {
-    document.getElementById('upload-form').classList.add('active');
+function showUploadForm(event){
+    event.stopPropagation();
+    document.getElementById('upload-form').style.display = 'block';
 }
-
 function closeForm() {
     document.getElementById('upload-form').classList.remove('active');
 }

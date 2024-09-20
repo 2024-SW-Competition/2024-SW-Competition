@@ -1,6 +1,7 @@
 {% load static %}
 
 <!-- 로그인 페이지 -->
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -16,7 +17,7 @@
             <form class="login-form" method="post">
                 {% csrf_token %}
                 <!-- CSRF Token -->
-                <input type="text" name="username" placeholder="아이디" required>
+                <input type="text" name="username" placeholder="이메일" required>
                 <input type="password" name="password" placeholder="비밀번호" required>
                 <button type="submit" class="login-button"><b>로그인</b></button>
             </form>
