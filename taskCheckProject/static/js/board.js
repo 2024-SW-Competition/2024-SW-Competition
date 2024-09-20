@@ -4,7 +4,7 @@ function showStory(element){
     var popup = document.getElementById("story-popup");
     var popupImg = document.getElementById("popup-img");
 
-    var uploadImage = "{{ upload_img }}";
+    var uploadImage = "{{ upload_img|escape.js }}";
 
     if (uploadImage) {
         popupImg.src = uploadImage;
