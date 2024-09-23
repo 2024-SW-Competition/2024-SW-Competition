@@ -27,6 +27,15 @@ DEBUG = True
 
 ALLOWED_HOSTS = []
 
+# openAi 관련 코드 -> 보안에 주의!!!!
+import os
+from dotenv import load_dotenv
+
+load_dotenv()  # .env 파일 로드
+
+# .env 파일에서 API 키를 가져오도록 설정
+OPENAI_API_KEY = os.getenv('OPENAI_API_KEY')
+
 # static 관련 설정
 STATIC_URL = '/static/'
 STATICFILES_DIRS = [
@@ -43,7 +52,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
 
-    'accounts', 'teams',
+    'accounts', 'teams', 
 ]
 
 MIDDLEWARE = [

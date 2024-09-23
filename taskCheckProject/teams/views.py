@@ -5,6 +5,26 @@ from .forms import CreateTeamForm, JoinTeamForm
 import random
 import string
 
+# openAi 관련 임포트
+import json
+from django.http import JsonResponse
+import openai
+import os
+from django.conf import settings
+
+
+openai.api_key=settings.OPENAI_API_KEY
+
+
+# 기간과 목표에 대한 코멘트 생성
+def get_openai_comment(goal, duration):
+    prompt = f"사용자가 설정한 목표: '{goal}'과 목표 기간: '{duration}'일을 고려했을 때, 목표 기간이 설정한 목표에 적절한지 2줄정도로 매우짧게 조언을 해주세요."
+    response = openai.ChatCompletion.create(
+        model="gpt-3.5-turbo",
+        messages=[{"role": "user", "content": prompt}]
+    )
+    return response['choices'][0]['message']['content']
+
 
 # 초대코드 생성
 def generate_invite_code():
@@ -43,6 +63,15 @@ def create_team(request):
     
     return render(request, 'create_team.html', {'form': form})
 
+
+# 팀 생성시 OpenAI의 코멘트 보여주기
+def get_openai_comment_view(request):
+    if request.method == 'POST':
+        goal = request.POST.get('goal')
+        duration = request.POST.get('duration')
+        comment = get_openai_comment(goal, duration)
+        return JsonResponse({'response': comment}, json_dumps_params={'ensure_ascii': False})
+    
 
 # 팀 조인
 def join_team(request):
@@ -135,3 +164,4 @@ def team_detail(request, team_id):
         'team': team,
         'team_members_profiles': team_members_profiles,
     })
+

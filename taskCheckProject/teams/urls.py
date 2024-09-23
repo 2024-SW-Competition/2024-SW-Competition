@@ -15,4 +15,7 @@ urlpatterns = [
 
    # 팀 상세페이지
    path('team-detail/<int:team_id>/', views.team_detail, name='team_detail'),
+
+   # openAI 코멘트
+   path('get_comment/', views.get_openai_comment_view, name='get_openai_comment'),
 ]

@@ -25,4 +25,8 @@ urlpatterns = [
 
     # 팀 생성
     path('teams/',include('teams.urls', namespace='teams')),
+
+    # openAi
+    # path('openAi/', include('openAi.urls', namespace='openAi')),
+  
 ]
