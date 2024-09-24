@@ -16,7 +16,7 @@ from django.conf import settings
 openai.api_key=settings.OPENAI_API_KEY
 
 
-# 기간과 목표에 대한 코멘트 생성
+# 기간과 목표에 대한 OpenAI의 코멘트 생성 (AJAX 요청으로 실행됨)
 def get_openai_comment(goal, duration):
     prompt = f"사용자가 설정한 목표: '{goal}'과 목표 기간: '{duration}'일을 고려했을 때, 목표 기간이 설정한 목표에 적절한지 2줄정도로 매우짧게 조언을 해주세요."
     response = openai.ChatCompletion.create(
@@ -25,6 +25,15 @@ def get_openai_comment(goal, duration):
     )
     return response['choices'][0]['message']['content']
 
+
+# 팀 생성 전에 OpenAI의 코멘트 보여주기
+def get_openai_comment_view(request):
+    if request.method == 'POST':
+        goal = request.POST.get('goal')
+        duration = request.POST.get('duration')
+        comment = get_openai_comment(goal, duration)
+        return JsonResponse({'response': comment}, json_dumps_params={'ensure_ascii': False})
+    
 
 # 초대코드 생성
 def generate_invite_code():
@@ -62,15 +71,6 @@ def create_team(request):
         form = CreateTeamForm()
     
     return render(request, 'create_team.html', {'form': form})
-
-
-# 팀 생성시 OpenAI의 코멘트 보여주기
-def get_openai_comment_view(request):
-    if request.method == 'POST':
-        goal = request.POST.get('goal')
-        duration = request.POST.get('duration')
-        comment = get_openai_comment(goal, duration)
-        return JsonResponse({'response': comment}, json_dumps_params={'ensure_ascii': False})
     
 
 # 팀 조인
