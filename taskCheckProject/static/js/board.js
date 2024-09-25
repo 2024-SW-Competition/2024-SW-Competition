@@ -1,3 +1,4 @@
+// static/js/board.js
 function showUploadForm(event) {
     event.stopPropagation();  // 이벤트가 상위 요소로 전달되지 않도록 함
     document.getElementById('upload-form').classList.remove('hidden');
@@ -36,3 +37,35 @@ function showStory(element) {
 function closePopUp() {
     document.getElementById('story-popup').classList.add('hidden');
 }
+
+function createComment(goal, duration, username, uploadImgUrl) {
+    console.log("createComment 함수가 호출되었습니다.");  // 함수 호출 확인
+    console.log("goal:", goal, "duration:", duration, "username:", username, "uploadImgUrl:", uploadImgUrl);  // 전달된 인자 확인
+    
+    const imgsrc = uploadImgUrl || document.getElementById('popup-img').getAttribute('src');  // 이미지 경로
+    console.log("이미지 경로: " + imgsrc);  // 디버깅용
+
+
+    // OpenAI 요청 보내기
+    fetch("{% url 'story_query_view' %}", {
+        method: "POST",
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRFToken': '{{ csrf_token }}'
+        },
+        body: JSON.stringify({
+            'img_src': imgsrc,
+            'goal': goal,
+            'duration': duration,
+            'username': username
+        })
+    })
+    .then(response => response.json())
+    .then(data => {
+        document.getElementById('openai-comment').textContent = data.response;
+    })
+    .catch(error => {
+        console.error("OpenAI 요청에서 오류 발생:", error);
+    });
+}
+

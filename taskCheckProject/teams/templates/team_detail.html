@@ -55,8 +55,11 @@
                 <!-- 팝업 이미지 -->
                 <div id="story-popup" class="popup hidden">
                     <span class="close-btn" onClick="closePopUp()">&times;</span>
-                    <!--<p id="upload-url">업로드된 이미지 URL:{{profile.upload_img.url}} </p>-->
                     <img class="popup-content" id="popup-img">
+
+                    <!-- 이미지 업로드 URL 및 기타 정보를 전달 -->
+                    <button id='create-comment-btn' onclick="createComment('{{ team.goal }}', '{{ team.duration }}', '{{ profile.member.username }}', '{{ profile.upload_img }}')">openAI 분석 결과</button>
+                    <p id="openai-comment"></p>
                 </div>
             </div>
         </div>
