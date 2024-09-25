@@ -21,13 +21,13 @@
                     {% csrf_token %}
                     <input type="hidden" name="room_id" value="{{ room_id }}">
                 </form>
-                
-                <div class="story-profile" onClick="showStory(this)">
-                    <img src= "{% static 'img/rat.png' %}" alt="Default Image">
-                    <!--<img src="{% static 'img/{{ user.character }}.png' %}" alt="character image" class="profile-img">-->
+                {% for story in user_stories %} <!--for문 돌면서 사용자 수만큼-->
+                <div class="story-profile" onClick="showStory(this)" data-upload-img="{% if profile.upload_img %}{{ profile.upload_img.url }}{% endif %}">
+                    <img src="{{ story.character_image.image_file.url }}" alt="character image" class="profile-img">
                     <button class="upload-btn" onclick="showUploadForm(event)">+</button> <!-- 작은 업로드 버튼 추가 -->
                 </div>
-                <div id="upload-form" class="popup-form hidden">
+                {% endfor %}
+                <div id="upload-form" class="popup-form hidden" >
                     <span class="close-btn" onClick="closeForm()">&times;</span>
                     <form method="POST" enctype="multipart/form-data" action="{% url 'story:upload_image' %}">
                         {% csrf_token %}
@@ -36,7 +36,7 @@
                         <button type="submit">업로드</button>
                     </form>
                 </div>
-                <div id="story-popup" class="popup" onclick="closePopup()">
+                <div id="story-popup" class="popup" onclick="closePopUp()">
                     <span class="close-btn">&times;</span>
                     <img class="popup-content" id="popup-img">
                 </div>
