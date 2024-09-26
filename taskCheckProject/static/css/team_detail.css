@@ -141,17 +141,24 @@ body {
     /* flex: 1; */
     padding: 20px;
     text-align: center;
-    border: 1px solid #ccc;
     flex-direction: column-reverse;
     overflow-y: auto;
+    overflow-x: hidden;
     height: 350px;
     width: 300px;
     display: flex;
     align-items: center;
+    margin: 0 auto;
+}
+
+/* 스크롤바 숨기기 */
+.game-board::-webkit-scrollbar {
+    display: none; /* 웹킷 기반 브라우저에서 스크롤바 숨김 */
 }
 
 .board-row {
     display: flex;
+    justify-content: center;
 }
 .space {
     display: flex;
@@ -159,13 +166,26 @@ body {
     align-items: center;
     width: 70px;
     height: 70px;
-    border: 1px solid black;
+    background-color: #E8E8E8;
 }
 
-.chracter {
-    width: 50%;
+.board-row:nth-child(odd) .space:nth-child(odd) { background-color: #D7E9FF; } /* 연한 파랑 */
+.board-row:nth-child(odd) .space:nth-child(even) { background-color: #7BA2D2; } /* 중간 파랑 */
+.board-row:nth-child(even) .space:nth-child(odd) { background-color: #E8E8E8; } /* 회색 */
+.board-row:nth-child(even) .space:nth-child(even) { background-color: #4092F7; } /* 진한 파랑 */
+
+.empty {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 70px;
+    height: 70px;
+
+}
+
+.member-image {
+    width: 30px;
     height: auto;
-    position: absolute;
-    bottom: 0;
-    left: 0;
+    display: block;
+    margin: 0 auto;
 }

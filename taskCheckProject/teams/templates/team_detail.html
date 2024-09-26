@@ -22,6 +22,7 @@
                 <p class="team-goal">목표: {{ team.goal }}</p>
                 <p class="team-duration">기간: {{ team.duration }}일</p>
                 <p class="home-date">{{ home.date }}일차</p>
+                <p class="invite">초대번호 {{team.code}}</p>
                 {% for profile in team_members_profiles %}
                     <li>
                         <!-- 팀원의 이름 표시 -->
@@ -63,16 +64,23 @@
                         <li>팀원 없음</li>
                     {% endfor %}
                 </ul> -->
-                <p>Rows: {{ rows }}</p>
                 <div class="game-board">
-                    {% for row in rows %}
+                    {% for row in board reversed %}
                         <div class="board-row">
-                            {% for j in columns %}
-                                <div class="space"></div>
+                            {% for cell in row %}
+                                <div class="{% if cell == -1 %}empty{% else %}space{% endif %}">
+                                    {% if cell != -1 %}
+                                        {% for member in team_members_profiles %}
+                                            {% if member.pos == cell %}
+                                                <img src="{% static 'img/'|add:member.character_image %}" alt="{{ member.member.username }}의 캐릭터" class="member-image" /> <!-- 사용자 이미지 출력 -->
+                                            {% endif %}
+                                        {% endfor %}
+                                        <!-- {{ cell }} -->
+                                    {% endif %}
+                                </div>
                             {% endfor %}
                         </div>
                     {% endfor %}
-
                 </div>
             </div>
         </div>

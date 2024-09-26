@@ -34,6 +34,8 @@ def create_team(request):
                 code=invite_code,
             )
 
+
+            users = UserTeamProfile.objects.filter(team=team)
             # 홈 생성
             Home.objects.create(
                 team=team,
@@ -41,7 +43,7 @@ def create_team(request):
                 start_date=timezone.now(),
                 date=1,
                 is_end=False,
-                invitation_num=team.code
+                invitation_num=team.code,
                 )
 
             Invite.objects.create(code=invite_code, team=team)
@@ -137,12 +139,14 @@ def team_detail(request, team_id):
             user_profile = UserTeamProfile.objects.get(user=member, team=team)
             team_members_profiles.append({
                 'member': member,
-                'character_image': user_profile.character_image
+                'character_image': user_profile.character_image,
+                'pos': user_profile.pos
             })
         except UserTeamProfile.DoesNotExist:
             team_members_profiles.append({
                 'member': member,
-                'character_image': None
+                'character_image': None,
+                'pos': None
             })
 
     update_home(request, team_id)
