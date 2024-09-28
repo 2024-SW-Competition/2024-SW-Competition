@@ -20,3 +20,6 @@ __pychache__/
 
 # openai key
 .env
+
+# jar파일
+.jar
