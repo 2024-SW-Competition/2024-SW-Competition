@@ -58,7 +58,12 @@
                     <img class="popup-content" id="popup-img">
 
                     <!-- 이미지 업로드 URL 및 기타 정보를 전달 -->
-                    <button id='create-comment-btn' onclick="createComment('{{ team.goal }}', '{{ team.duration }}', '{{ profile.member.username }}', '{{ profile.upload_img }}')">openAI 분석 결과</button>
+                    <button id='create-comment-btn' 
+                        data-goal="{{ team.goal }}" 
+                        data-duration="{{ team.duration }}" 
+                        data-username="{{ profile.member.username }}" 
+                        data-uploadimgurl="{{ profile.upload_img }}"
+                        onclick="createComment('{{ team.goal }}', '{{ team.duration }}', '{{ profile.member.username }}', '{{ profile.upload_img }}')">openAI 분석 결과</button>
                     <p id="openai-comment"></p>
                 </div>
             </div>

@@ -28,7 +28,7 @@ urlpatterns = [
     path('accounts/',include('accounts.urls', namespace='accounts')),
     path('story/', include('story.urls', namespace='story')),  # story 앱의 URL 패턴 추가
     path('teams/',include('teams.urls', namespace='teams')),
-    path('openai/', include('story_openai.urls')),
+    path('story_openai/', include('story_openai.urls')),
 ]
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
