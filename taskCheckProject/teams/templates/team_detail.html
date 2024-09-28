@@ -51,27 +51,15 @@
                         <button type="submit">업로드</button>
                     </form>
                 </div>
-                
-                <script>
-                    const storyQueryUrl = "{% url 'story_query_view' %}";
-                </script>
-                
 
                 <!-- 팝업 이미지 -->
                 <div id="story-popup" class="popup hidden">
                     <span class="close-btn" onClick="closePopUp()">&times;</span>
                     <img class="popup-content" id="popup-img">
-                    {% for profile in team_members_profiles %}
-                    <!-- 이미지 업로드 URL 및 기타 정보를 전달 -->
-                    <!-- HTML -->
-                    <button id="create-comment-btn" 
-                    data-username="{{profile.member.username}}"
-                    data-goal="{{ team.goal }}"
-                    data-duration="{{team.duration}}"
-                    data-uploadimgurl="{% if profile.upload_img %}{{ profile.upload_img.url }}{% else %}None{% endif %}">openAI 분석 결과</button>
 
+                    <!-- 이미지 업로드 URL 및 기타 정보를 전달 -->
+                    <button id='create-comment-btn' onclick="createComment('{{ team.goal }}', '{{ team.duration }}', '{{ profile.member.username }}', '{{ profile.upload_img }}')">openAI 분석 결과</button>
                     <p id="openai-comment"></p>
-                    {%endfor%}
                 </div>
             </div>
         </div>
