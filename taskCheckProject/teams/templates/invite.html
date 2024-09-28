@@ -1,0 +1,68 @@
+{% load static %}
+
+<!-- 초대코드 페이지 -->
+
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>체크마블</title>
+    <link rel="stylesheet" href="{% static 'css/invite.css' %}">
+</head>
+<body>
+    <div class="container">
+        <div class="content">
+            <!-- 홈으로 돌아가는 화살표 버튼 -->
+            <a href="{% url 'accounts:home' %}" class="back-button" ><b><</b></a>
+
+            <h3>초대번호를 입력하세요!</h3>
+            <form method="post">
+                {% csrf_token %}
+                <div class="input-boxes">
+                    <input type="text" name="code1" maxlength="1" class="box gray-box" required>
+                    <input type="text" name="code2" maxlength="1" class="box sky-box" required>
+                    <input type="text" name="code3" maxlength="1" class="box blue-box" required>
+                    <input type="text" name="code4" maxlength="1" class="box gray2-box" required>
+                </div>
+                <button type="submit" class="submit-button">캐릭터 고르기</button>
+            </form>
+
+            <p>새 목표방을 만들고 싶으신가요?</p>
+            <button class="add-button"><b>+ 목표 추가하기</b></button>
+        </div>
+    </div>
+
+     <!-- 메시지 표시를 위한 JavaScript -->
+     <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // 메시지를 받기 위한 배열 초기화
+            var messages = {
+                error: [],
+                info: []
+            };
+
+            // Django 템플릿에서 메시지를 읽어와 배열에 추가
+            {% if messages %}
+                {% for message in messages %}
+                    {% if message.tags == 'error' %}
+                        messages.error.push("{{ message }}");
+                    {% elif message.tags == 'info' %}
+                        messages.info.push("{{ message }}");
+                    {% endif %}
+                {% endfor %}
+            {% endif %}
+
+            // 에러 메시지 알림
+            messages.error.forEach(function(msg) {
+                alert(msg);
+            });
+
+            // 정보 메시지 알림
+            messages.info.forEach(function(msg) {
+                alert(msg);
+            });
+        });
+    </script>
+</body>
+</html>

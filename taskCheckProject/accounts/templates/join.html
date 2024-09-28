@@ -1,0 +1,41 @@
+{% load static %}
+
+<!-- 회원가입 페이지 -->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>체크마블</title>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+</head>
+<body>
+    <div class="container">
+        <div class="content">
+            <h1 style="font-family:'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif">Join</h1>
+            <form class="register-form" method="post">
+                <!-- CSRF Token -->
+                {% csrf_token %}
+                <input type="text" name="username" placeholder="이메일" required>
+                <input type="text" name="first_name" placeholder="닉네임" required>
+                <input type="password" name="password" placeholder="비밀번호" required>
+                <input type="password" name="repeat" placeholder="비밀번호 확인" required>
+                <button type="submit" class="register-button"><b>가입하기</b></button>
+            </form>
+           
+        </div>
+    </div>
+    <link rel="stylesheet" href="{% static 'css/join.css' %}">
+    <script>
+         document.addEventListener('DOMContentLoaded', function() {
+            {% if messages %}
+                {% for message in messages %}
+                    if ("{{ message.tags }}" === "error") {
+                        alert("{{ message }}");
+                    }
+                {% endfor %}
+            {% endif %}
+        });
+    </script>
+</body>

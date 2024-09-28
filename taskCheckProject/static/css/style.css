@@ -1,0 +1,39 @@
+/* 전체 페이지의 기본 설정 */
+body {
+    margin: 0;
+    padding: 0;
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: black; 
+}
+
+.container {
+    width: 375px; 
+    height: 667px; 
+    background-color: white; 
+    overflow: auto; 
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.content {
+    text-align: center;
+    padding: 20px; 
+}
+
+.container::-webkit-scrollbar {
+    width: 13px;
+}
+
+.container::-webkit-scrollbar-thumb {
+    background-color: blue;
+    border-radius: 10px; 
+}
+
+.container::-webkit-scrollbar-track {
+    background: transparent; 
+}

@@ -1,0 +1,54 @@
+<!--보드게임 화면-->
+{% load static %} <!-- 정적 파일 쓸 때는 이 한 줄 맨 위에 추가해야돼-->
+
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>체크마블</title>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}"> 
+    <link rel="stylesheet" href="{% static 'css/board.css' %}"> 
+</head>
+<body>
+    <div class="container">
+        <div class="content">
+            <div class="room-info">
+                <h1>구현 필요
+            </div>
+            <div class="story">
+                <form method="POST" action="{% url 'story:story_view' %}">
+                    {% csrf_token %}
+                    <input type="hidden" name="room_id" value="{{ room_id }}">
+                </form>
+                {% for story in user_stories %} <!--for문 돌면서 사용자 수만큼-->
+                <div class="story-profile" onClick="showStory(this)" data-upload-img="{% if profile.upload_img %}{{ profile.upload_img.url }}{% endif %}">
+                    <img src="{{ story.character_image.image_file.url }}" alt="character image" class="profile-img">
+                    <button class="upload-btn" onclick="showUploadForm(event)">+</button> <!-- 작은 업로드 버튼 추가 -->
+                </div>
+                {% endfor %}
+                <div id="upload-form" class="popup-form hidden" >
+                    <span class="close-btn" onClick="closeForm()">&times;</span>
+                    <form method="POST" enctype="multipart/form-data" action="{% url 'story:upload_image' %}">
+                        {% csrf_token %}
+                        <label for="image">이미지 업로드:</label>
+                        <input type="file" id="image" name="img" accept="image/*" required>
+                        <button type="submit">업로드</button>
+                    </form>
+                </div>
+                <div id="story-popup" class="popup" onclick="closePopUp()">
+                    <span class="close-btn">&times;</span>
+                    <img class="popup-content" id="popup-img">
+                </div>
+            </div>
+            <div class="game-board">
+                <h1>보드게임 화면</h1>
+            </div>
+            <div class="footer-nav">
+                <h1>하단 네비게이션 바. 구현 필요</h1>
+            </div>
+        </div>
+    </div>
+    <script src="{% static 'js/board.js' %}"></script>
+</body>
+</html>

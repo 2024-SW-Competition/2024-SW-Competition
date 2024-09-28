@@ -1,0 +1,29 @@
+{% load static %}
+
+<!-- 회원가입 완료 페이지 -->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>체크마블</title>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <link rel="stylesheet" href="{% static 'css/start.css' %}"> 
+</head>
+<body>
+    <div class="container">
+        <div class="content">
+            <h2 style="font-family:Verdana, Geneva, Tahoma, sans-serif;">회원가입 완료</h2>
+            <p style="font-family:Verdana, Geneva, Tahoma, sans-serif;">체크마블과 함께<br> 목표를 하나씩 이뤄보아요!</p><br>
+            <button id="loginButton" class="login-button" style="font-family:Verdana, Geneva, Tahoma, sans-serif;">로그인하러가기</button>
+        </div>
+    </div>
+    <script>
+        var loginUrl = "{% url 'accounts:login' %}";
+        document.getElementById('loginButton').onclick = function() {
+            window.location.href = loginUrl;
+        };
+    </script>
+</body>
+</html>
