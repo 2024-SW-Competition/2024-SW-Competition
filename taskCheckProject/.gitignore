@@ -17,3 +17,6 @@ __pychache__/
 
 *.pyc
 *.pyo
+
+# openai key
+.env
