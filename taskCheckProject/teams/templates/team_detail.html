@@ -19,10 +19,9 @@
 
                 <!-- 팀 정보 -->
                 <h2 class="team-name">{{ team.name }}</h2>
-                <p class="team-goal">목표: {{ team.goal }}</p>
-                <p class="team-duration">기간: {{ team.duration }}일</p>
-                <p class="home-date">{{ home.date }}일차</p>
-                <p class="invite">초대번호 {{team.code}}</p>
+                <p class="team-goal">목표 [ {{ team.goal }} ]</p>
+                <p class="team-duration">목표 기간 {{ team.duration }}일 | {{ home.date }}일차</p>
+                <p class="invite-code">초대번호 {{team.code}}</p>
                 {% for profile in team_members_profiles %}
                     <li>
                         <!-- 팀원의 이름 표시 -->
@@ -81,7 +80,7 @@
                             {% endfor %}
                         </div>
                     {% endfor %}
-                </div>
+                  </div>
             </div>
         </div>
     </div>

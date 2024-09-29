@@ -4,9 +4,7 @@ from home import views
 app_name = 'home'
 
 urlpatterns = [
-    #path('update/<int:team_id>/', views.update_home, name='update_home'),
+    # path('team_board/<int:team_id>/', views.board_view, name='team_board'),
 
-    path('boardView/<int:team_id>/', views.board_view, name='board_view'),
-
-    #path('teams/team-detail/<int:team_id>/', views.user_pos, name='user_pos'),
+    path('completion/<int:team_id>/', views.completion, name='completion'),
 ]

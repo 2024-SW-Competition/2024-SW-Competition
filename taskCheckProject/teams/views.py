@@ -5,7 +5,7 @@ from .forms import CreateTeamForm, JoinTeamForm
 import random
 import string
 from home.models import Home
-from home.views import update_home
+from home.views import update_home, board_view, completion
 from django.utils import timezone
 
 
@@ -146,13 +146,21 @@ def team_detail(request, team_id):
             team_members_profiles.append({
                 'member': member,
                 'character_image': None,
-                'pos': None
+                'pos': 0
             })
 
-    update_home(request, team_id)
+
+    # 방 정보 업데이트 & 종료여부 확인
+    redirect_response = update_home(request, team_id)
+    if redirect_response:
+        return redirect_response
+    
+    # board_view 데이터 받아오기
+    board_data = board_view(request, team_id)
 
     return render(request, 'team_detail.html', {
         'team': team,
         'team_members_profiles': team_members_profiles,
-        'home': home
+        'home': home,
+        'board': board_data['board'],
     })
