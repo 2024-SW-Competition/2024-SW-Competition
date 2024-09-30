@@ -144,7 +144,7 @@ h3 {
 .logout-link a {
     display: inline-block;
     padding: 3px 8px; 
-    background-color: #81A6D4; 
+    background-color: #004a9e; 
     color: white; 
     font-size: 13x; 
     font-weight: bold; 
@@ -155,7 +155,7 @@ h3 {
 }
 
 .logout-link a:hover {
-    background-color: #004a9e;
+    background-color: #81A6D4;
 }
 
 /* 페이지네이션 스타일 */

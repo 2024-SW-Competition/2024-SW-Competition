@@ -46,7 +46,7 @@ input[type="number"] {
 .duration-container {
     display: flex;
     align-items: center;
-    gap: 8px; /* 내부 요소 간의 간격 */
+    gap: 8px; 
     margin-bottom: 15px;
     max-width: 300px;
     margin: 0 auto; 
@@ -68,6 +68,12 @@ span {
 p {
     margin-top: 30px;
     font-size: 12px;
+}
+
+.submit-button:disabled {
+    background-color: gray;
+    color: rgba(255, 255, 255, 0.7);
+    cursor: not-allowed; 
 }
 
 .submit-button {

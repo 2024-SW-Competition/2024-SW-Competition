@@ -9,7 +9,6 @@ class Home(models.Model):
   goal = models.CharField(max_length=500)
   date = models.PositiveIntegerField(default=1)
   start_date = models.DateField(default=timezone.now)
-  positions = models.JSONField(default=dict)
   is_end = models.BooleanField(default=False)
   invitation_num = models.CharField(max_length=10, null=True, blank=True)
 

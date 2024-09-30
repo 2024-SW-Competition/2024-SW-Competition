@@ -4,10 +4,36 @@ from .models import Invite, Team, UserTeamProfile
 from .forms import CreateTeamForm, JoinTeamForm
 import random
 import string
-from home.models import Home
-from home.views import update_home
-from django.utils import timezone
 
+# openAi 관련 임포트
+import json
+from django.http import JsonResponse
+import openai
+import os
+from django.conf import settings
+
+
+openai.api_key=settings.OPENAI_API_KEY1
+
+
+# 기간과 목표에 대한 OpenAI의 코멘트 생성 (AJAX 요청으로 실행됨)
+def get_openai_comment(goal, duration):
+    prompt = f"사용자가 설정한 목표: '{goal}'과 목표 기간: '{duration}'일을 고려했을 때, 목표 기간이 설정한 목표에 적절한지 2줄정도로 매우짧게 조언을 해주세요."
+    response = openai.ChatCompletion.create(
+        model="gpt-3.5-turbo",
+        messages=[{"role": "user", "content": prompt}]
+    )
+    return response['choices'][0]['message']['content']
+
+
+# 팀 생성 전에 OpenAI의 코멘트 보여주기
+def get_openai_comment_view(request):
+    if request.method == 'POST':
+        goal = request.POST.get('goal')
+        duration = request.POST.get('duration')
+        comment = get_openai_comment(goal, duration)
+        return JsonResponse({'response': comment}, json_dumps_params={'ensure_ascii': False})
+    
 
 # 초대코드 생성
 def generate_invite_code():
@@ -34,16 +60,6 @@ def create_team(request):
                 code=invite_code,
             )
 
-            # 홈 생성
-            Home.objects.create(
-                team=team,
-                goal=team.goal,
-                start_date=timezone.now(),
-                date=1,
-                is_end=False,
-                invitation_num=team.code
-                )
-
             Invite.objects.create(code=invite_code, team=team)
 
             print(f'팀 "{name}"이(가) 생성되었습니다. 초대 코드는 {invite_code}입니다.')
@@ -55,7 +71,7 @@ def create_team(request):
         form = CreateTeamForm()
     
     return render(request, 'create_team.html', {'form': form})
-
+    
 
 # 팀 조인
 def join_team(request):
@@ -124,7 +140,6 @@ def choose_character(request, team_id):
 # 팀 상세페이지
 def team_detail(request, team_id):
     team = get_object_or_404(Team, id=team_id)
-    home = get_object_or_404(Home, team=team)
 
     if request.user not in team.members.all():
         messages.error(request, "이 팀에 접근할 권한이 없습니다.")
@@ -145,10 +160,8 @@ def team_detail(request, team_id):
                 'character_image': None
             })
 
-    update_home(request, team_id)
-
     return render(request, 'team_detail.html', {
         'team': team,
         'team_members_profiles': team_members_profiles,
-        'home': home
     })
+

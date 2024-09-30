@@ -22,17 +22,21 @@ from django.views.generic import RedirectView
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    
-    # 회원가입/로그인
+
+    # accounts
     path('accounts/',include('accounts.urls', namespace='accounts')),
-    path('story/', include('story.urls')),  # story 앱의 URL 패턴 추가
-    path('home/', include('home.urls')), # home 앱의 URL 패턴 추가
 
+    # teams
+    path('teams/',include('teams.urls', namespace='teams')),
+  
+    # story
+    path('story/', include('story.urls', namespace='story')), 
 
-    # 팀 생성
-    path('teams/', include('teams.urls', namespace='teams')),
+    # home
+    path('home/', include('home.urls', namespace='home')),
 
     path('', RedirectView.as_view(url='story/', permanent=True)),
 ]
+
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

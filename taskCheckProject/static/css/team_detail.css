@@ -12,15 +12,14 @@ body {
 
 .container {
     width: 375px; 
-    height: 667px; 
+    height: 667px;
     background-color: white; 
     overflow: auto; 
     display: flex;
     flex-direction: column;
-    justify-content: flex-start;
+    justify-content: center;
     align-items: center;
-    position: relative;
-    padding-bottom: 20px;
+    position: relative; 
 }
 
 .content {
@@ -52,8 +51,8 @@ body {
 .team-goal, .team-duration {
     font-size: 16px;
     color: #555;
-    margin-bottom: 10px;
 }
+
 
 /* 팀원 목록 */
 .team-members {
@@ -107,6 +106,85 @@ body {
     text-align: center;
     cursor: pointer;
 }
+.hidden{
+    display: none;
+}
+
+/* 팝업 form */
+.popup-form, .popup {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: white;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+}
+
+.popup img {
+    max-width: 100%;
+    max-height: 100%;
+}
+
+.close-btn {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    cursor: pointer;
+    font-size: 24px;
+}
+
+/* 조정된 이미지 크기와 배치 */
+/* 스토리 css */
+.story-container {
+    display: flex;
+    overflow-x: auto;  /* Allows horizontal scrolling */
+    white-space: nowrap;
+    padding: 10px;
+    gap: 15px;  /* Adjust spacing between items */
+}
+
+.story-item {
+    display: inline-block;
+    text-align: center;
+    flex-shrink: 0;  /* Prevents shrinking of items, keeping them the same size */
+    width: 80px;  /* Set a width for each story item */
+}
+
+.story-profile {
+    position: relative;
+    width: 60px;  /* Adjust the size for the profile image */
+    height: 60px;
+    border-radius: 50%;
+    overflow: hidden;
+}
+
+.profile-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 50%;  /* Ensures the image remains circular */
+}
+
+.upload-btn {
+    position: absolute;
+    bottom: 5px;
+    right: 5px;
+    background-color: #fff;
+    border: none;
+    border-radius: 50%;
+    width: 20px;
+    height: 20px;
+    font-size: 14px;
+    line-height: 20px;
+    text-align: center;
+    cursor: pointer;
+}
+
+.story-container::-webkit-scrollbar {
+    display: none;  /* Hide the scrollbar */
+}
 
 /* 팝업 form */
 .popup-form, .popup {
@@ -141,31 +219,52 @@ body {
     /* flex: 1; */
     padding: 20px;
     text-align: center;
-    border: 1px solid #ccc;
     flex-direction: column-reverse;
     overflow-y: auto;
+    overflow-x: hidden;
     height: 350px;
-    width: 300px;
+    width: 320px;
     display: flex;
     align-items: center;
+    margin: 0 auto;
+}
+
+/* 스크롤바 숨기기 */
+.game-board::-webkit-scrollbar {
+    display: none; /* 웹킷 기반 브라우저에서 스크롤바 숨김 */
 }
 
 .board-row {
     display: flex;
+    justify-content: center;
 }
 .space {
     display: flex;
     justify-content: center;
     align-items: center;
-    width: 70px;
-    height: 70px;
-    border: 1px solid black;
+    flex-wrap: wrap;
+    width: 80px;
+    height: 80px;
+    background-color: #E8E8E8;
 }
 
-.chracter {
-    width: 50%;
+.board-row:nth-child(odd) .space:nth-child(odd) { background-color: #D7E9FF; } /* 연한 파랑 */
+.board-row:nth-child(odd) .space:nth-child(even) { background-color: #7BA2D2; } /* 중간 파랑 */
+.board-row:nth-child(even) .space:nth-child(odd) { background-color: #E8E8E8; } /* 회색 */
+.board-row:nth-child(even) .space:nth-child(even) { background-color: #4092F7; } /* 진한 파랑 */
+
+.empty {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 80px;
+    height: 80px;
+
+}
+
+.member-image {
+    width: 25px;
     height: auto;
-    position: absolute;
-    bottom: 0;
-    left: 0;
+    display: block;
+    margin: 0 auto;
 }

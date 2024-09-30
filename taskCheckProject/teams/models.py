@@ -20,7 +20,6 @@ class UserTeamProfile(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     team = models.ForeignKey(Team, on_delete=models.CASCADE)
     character_image = models.CharField(max_length=100)  # 사용자가 선택한 캐릭터 이미지
-    upload_img = models.ImageField(upload_to='uploads/', null=True, blank=True)  # 업로드이미지
 
     class Meta:
         unique_together = ('user', 'team')  # 같은 팀에서 같은 사용자가 중복된 프로필을 갖지 않도록
@@ -33,9 +32,7 @@ class UserTeamProfile(models.Model):
 class Invite(models.Model):
     team = models.ForeignKey(Team, on_delete=models.CASCADE)
     code = models.CharField(max_length=4, unique=True)
-    # invited_user = models.ForeignKey(User, on_delete=models.CASCADE, null=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
-    # is_used = models.BooleanField(default=False)
-    
+
     def __str__(self):
         return self.code

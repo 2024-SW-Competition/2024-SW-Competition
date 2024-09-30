@@ -1,0 +1,25 @@
+/* 방 종료 스타일 */
+
+.content h2 {
+  color: #333;
+  margin-bottom: 30px;
+  font-size: 24px;
+}
+
+/* 팀 목록 이동 버튼 스타일 */
+.goHomes-button {
+  width: 100%;
+  padding: 12px;
+  border: none;
+  border-radius: 20px;
+  background-color: #007bff;
+  color: white;
+  font-size: 13px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  margin: 0 auto;
+}
+
+.goHomes-button:hover {
+  background-color: #0056b3;
+}

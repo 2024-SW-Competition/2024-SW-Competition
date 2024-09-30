@@ -10,7 +10,6 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.1/ref/settings/
 """
 
-import os
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -28,10 +27,38 @@ DEBUG = True
 
 ALLOWED_HOSTS = []
 
+# openAi 관련 코드 -> 보안에 주의!!!!
+import os
+from dotenv import load_dotenv
+
+load_dotenv()  # .env 파일 로드
+
+# 텍스트 openai
+OPENAI_API_KEY1 = os.getenv('OPENAI_API_KEY1')
+
+
+import openai
+from google.oauth2 import service_account
+
+# 서비스 계정 키 파일 경로 설정
+GS_CREDENTIALS=service_account.Credentials.from_service_account_file(
+    os.path.join(BASE_DIR, 'prismatic-vim-436904-m0-598e46b5e7f6.json')
+)
+# BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = os.path.join(BASE_DIR, 'prismatic-vim-436904-m0-598e46b5e7f6.json')
+
+
+# 업로드 된 파일이 public으로 접근 가능하게.
+GS_DEFAULT_ACL='publicRead'
+
+# 이미지 openai
+OPENAI_API_KEY2=os.getenv('OPENAI_API_KEY2')
+
+
 # static 관련 설정
 STATIC_URL = '/static/'
 STATICFILES_DIRS = [
-    BASE_DIR / 'static',
+    os.path.join(BASE_DIR, 'static'),  # 문자열 경로 결합
 ]
 
 # Application definition
@@ -44,10 +71,8 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
 
-    'accounts',
-    'story',
-    'home',
-    'teams',
+    'accounts', 'teams', 'story', 'home',
+    'story_openai',
 ]
 
 MIDDLEWARE = [
@@ -65,9 +90,7 @@ ROOT_URLCONF = 'taskCheckProject.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [
-          os.path.join(BASE_DIR, 'templates'),
-        ],
+        'DIRS': [],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -128,16 +151,14 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.1/howto/static-files/
 
-STATIC_URL = 'static/'
-
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-import os
-
-# Static files (CSS, JavaScript, Images)
 MEDIA_URL = '/media/'
-MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+MEDIA_ROOT = BASE_DIR / 'media'
+
+DEFAULT_FILE_STORAGE='storages.backends.gc=loud.GoogleCloudStorage'
+GS_BUCKET_NAME='2024-sw-competition-bucket'

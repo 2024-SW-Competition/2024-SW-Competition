@@ -1,7 +1,4 @@
 {% load static %}
-
-<!-- 임시 팀 상세페이지  -->
-
 <!DOCTYPE html>
 <html lang="ko">
 <head>
@@ -14,69 +11,83 @@
     <div class="container">
         <div class="content">
             <div class="team-detail">
-                <!-- 홈으로 돌아가는 화살표 버튼 -->
-                <a href="{% url 'accounts:home' %}" class="back-button" ><b><</b></a>
+                <a href="{% url 'accounts:home' %}" class="back-button"><b><</b></a>
 
-                <!-- 팀 정보 -->
                 <h2 class="team-name">{{ team.name }}</h2>
                 <p class="team-goal">목표: {{ team.goal }}</p>
                 <p class="team-duration">기간: {{ team.duration }}일</p>
-                <p class="home-date">{{ home.date }}일차</p>
-                {% for profile in team_members_profiles %}
-                    <li>
-                        <!-- 팀원의 이름 표시 -->
-                        {{ profile.member.username }}
+                
+                <div class="story-container">
+                    {% for profile in team_members_profiles %}
+                        <div class="story-item">
+                            <!-- 팀원의 이름 표시 -->
+                            <p>{{ profile.member.username }}</p>
+                            <p>{{ profile.is_today }}</p>
 
-                        <!-- 팀원들의 캐릭터 이미지 표시 -->
-                        {% if profile.character_image %}
-                            <!--<img src="{% static 'img/'|add:profile.character_image %}" alt="{{ profile.member.username }}의 캐릭터" width="100px">-->
-                            <div class="story-profile" onClick="showStory(this)" data-upload-img="{% if upload_img %}{{ upload_img }}{% endif %}">
-                                <img src="{% static 'img/'|add:profile.character_image %}" alt="character image" class="profile-img">
-                                <button class="upload-btn" onclick="showUploadForm(event)">+</button> <!-- 작은 업로드 버튼 추가 -->
-                            </div>
-                        {% else %}
-                            <p>캐릭터 이미지 없음</p>
-                        {% endif %}
-                    </li>
-                {% empty %}
-                    <li>팀원 없음</li>
-                {% endfor %}
-                <div id="upload-form" class="popup-form hidden" >
+                            <!-- 팀원들의 캐릭터 이미지 또는 업로드 이미지 표시 -->
+                            <div class="story-profile" onClick="showStory(this)" 
+                                data-upload-img="{% if profile.upload_img and profile.is_today %}{{ profile.upload_img}}{% else %}None{% endif %}">
+                                <img src="{% static 'img/'|add:profile.character_image %}" 
+                                     alt="character image" class="profile-img">
+                                {% if request.user == profile.member %} <!--로그인한 사용자한테만 수정 버튼 생김-->
+                                     <button class="upload-btn" onclick="showUploadForm(event)">+</button>
+                                {% endif %}
+                                </div>
+                            
+                        </div>
+                    {% empty %}
+                        <div>팀원 없음</div>
+                    {% endfor %}
+                </div>
+
+                <!-- 업로드 폼 -->
+                <div id="upload-form" class="popup-form hidden">
                     <span class="close-btn" onClick="closeForm()">&times;</span>
-                    <form method="POST" enctype="multipart/form-data" action="{% url 'story:upload_image' %}">
+                    <form method="POST" enctype="multipart/form-data" action="{% url 'story:upload_image' team_id=team.id %}">
                         {% csrf_token %}
+                        <input type="hidden" name="team_id" value="{{ team.id }}">
                         <label for="image">이미지 업로드:</label>
                         <input type="file" id="image" name="img" accept="image/*" required>
                         <button type="submit">업로드</button>
                     </form>
                 </div>
-                <div id="story-popup" class="popup" onclick="closePopUp()">
-                    <span class="close-btn">&times;</span>
+
+                <!-- 팝업 이미지 -->
+                <div id="story-popup" class="popup hidden">
+                    <span class="close-btn" onClick="closePopUp()">&times;</span>
                     <img class="popup-content" id="popup-img">
+
+                    <!-- 이미지 업로드 URL 및 기타 정보를 전달 -->
+                    <button id='create-comment-btn' 
+                        data-goal="{{ team.goal }}" 
+                        data-duration="{{ team.duration }}" 
+                        data-username="{{ profile.member.username }}" 
+                        data-uploadimgurl="{{ profile.upload_img }}"
+                        onclick="createComment('{{ team.goal }}', '{{ team.duration }}', '{{ profile.member.username }}', '{{ profile.upload_img }}')">openAI 분석 결과</button>
+                    <p id="openai-comment"></p>
                 </div>
-                <!-- 팀원 목록
-                <h3>팀원 목록</h3>
-                <ul class="team-members">
-                    {% for member in team.members.all %}
-                        <li>{{ member.username }}</li>
-                    {% empty %}
-                        <li>팀원 없음</li>
-                    {% endfor %}
-                </ul> -->
-                <p>Rows: {{ rows }}</p>
                 <div class="game-board">
-                    {% for row in rows %}
+                    {% for row in board reversed %}
                         <div class="board-row">
-                            {% for j in columns %}
-                                <div class="space"></div>
+                            {% for cell in row %}
+                                <div class="{% if cell == -1 %}empty{% else %}space{% endif %}">
+                                    {% if cell != -1 %}
+                                        {% for member in team_members_profiles %}
+                                            {% if member.pos == cell %}
+                                                <img src="{% static 'img/'|add:member.character_image %}" alt="{{ member.member.username }}의 캐릭터" class="member-image" /> <!-- 사용자 이미지 출력 -->
+                                            {% endif %}
+                                        {% endfor %}
+                                        <!-- {{ cell }} -->
+                                    {% endif %}
+                                </div>
                             {% endfor %}
                         </div>
                     {% endfor %}
-
-                </div>
+                  </div>
             </div>
         </div>
     </div>
+    <script src="{% static 'js/board.js' %}"></script>
     <script src="{% static 'js/team_detail.js' %}"></script>
 </body>
 </html>
