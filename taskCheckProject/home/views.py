@@ -69,27 +69,6 @@ def board_view(request, team_id):
         'board': flipped_board,
     }
 
-
-# def get_team_members_profiles(request, team_id):
-#    team = get_object_or_404(Team, id=team_id)
-#    team_members_profiles = []
-#    for member in team.members.all():
-#         try:
-#             user_profile = UserTeamProfile.objects.get(user=member, team=team)
-#             team_members_profiles.append({
-#                 'member': member,
-#                 'character_image': user_profile.character_image,
-#                 'pos': user_profile.pos  # 위치도 함께 저장
-#             })
-#         except UserTeamProfile.DoesNotExist:
-#             team_members_profiles.append({
-#                 'member': member,
-#                 'character_image': None,
-#                 'pos': 0  # 기본값 설정
-#             })
-#    return team_members_profiles
-
-
   
 
 # 보드게임판 위 유저 위치 설정 -> 위에 포함시켜야
