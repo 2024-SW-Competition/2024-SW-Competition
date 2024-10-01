@@ -5,6 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>체크마블</title>
+    <script src="https://developers.kakao.com/sdk/js/kakao.js"></script>
     <link rel="stylesheet" href="{% static 'css/team_detail.css' %}">
 </head>
 <body>
@@ -12,34 +13,36 @@
         <div class="content">
             <div class="team-detail">
                 <a href="{% url 'accounts:home' %}" class="back-button"><b><</b></a>
-
                 <h2 class="team-name">{{ team.name }}</h2>
+                <button class="invite-btn" onclick="sendKakaoLink('{{team.code}}')">초대코드 공유하기</button>
                 <p class="team-goal">목표: {{ team.goal }}</p>
                 <p class="team-duration">기간: {{ team.duration }}일</p>
-                
+                <p>{{team.code}}</p>
+
                 <div class="story-container">
                     {% for profile in team_members_profiles %}
                         <div class="story-item">
-                            <!-- 팀원의 이름 표시 -->
-                            <p>{{ profile.member.username }}</p>
-                            <p>{{ profile.is_today }}</p>
-
-                            <!-- 팀원들의 캐릭터 이미지 또는 업로드 이미지 표시 -->
-                            <div class="story-profile" onClick="showStory(this)" 
-                                data-upload-img="{% if profile.upload_img and profile.is_today %}{{ profile.upload_img}}{% else %}None{% endif %}">
-                                <img src="{% static 'img/'|add:profile.character_image %}" 
-                                     alt="character image" class="profile-img">
-                                {% if request.user == profile.member %} <!--로그인한 사용자한테만 수정 버튼 생김-->
-                                     <button class="upload-btn" onclick="showUploadForm(event)">+</button>
-                                {% endif %}
+                            <!-- 캐릭터 이미지와 팀원의 이름을 포함하는 컨테이너 -->
+                          
+                            <div class="story-profile-container">
+                                <!-- 팀원들의 캐릭터 이미지 또는 업로드 이미지 표시 -->
+                                <div class="story-profile" onClick="showStory(this)" 
+                                    data-upload-img="{% if profile.upload_img and profile.is_today %}{{ profile.upload_img }}{% else %}None{% endif %}">
+                                    <img src="{% static 'img/'|add:profile.character_image %}" 
+                                         alt="character image" class="profile-img">
+                                    {% if request.user == profile.member %} <!--로그인한 사용자한테만 수정 버튼 생김-->
+                                         <button class="upload-btn" onclick="showUploadForm(event)">+</button>
+                                    {% endif %}
                                 </div>
-                            
+                                <!-- 팀원의 이름 표시, 캐릭터 밑에 가까이 위치 -->
+                                <p class="profile-name">{{ profile.member.username }}</p>
+                            </div>
                         </div>
                     {% empty %}
                         <div>팀원 없음</div>
                     {% endfor %}
                 </div>
-
+                
                 <!-- 업로드 폼 -->
                 <div id="upload-form" class="popup-form hidden">
                     <span class="close-btn" onClick="closeForm()">&times;</span>

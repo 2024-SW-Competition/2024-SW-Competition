@@ -1,3 +1,18 @@
+Kakao.init('c018c1fdf296122d84ba45b417ca6510');  // Kakao Developers에서 발급받은 앱 키 입력
+function sendKakaoLink(code) {
+    const inviteCode = code
+    const inviteLink = `http://${window.location.hostname}:8000/accounts/login/`;
+
+    console.log("Invite link:", inviteLink);  
+
+    Kakao.Link.sendCustom({
+      templateId: 112687,  // 생성한 템플릿 ID 입력
+      templateArgs: {
+        'invite_code': code,
+        'link': inviteLink
+      }
+    });
+  }
 function showUploadForm(event) {
     event.stopPropagation();  // 이벤트가 상위로 전달되지 않도록 방지
     document.getElementById('upload-form').classList.remove('hidden');
