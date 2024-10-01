@@ -29,7 +29,12 @@ urlpatterns = [
     path('story/', include('story.urls', namespace='story')),  # story 앱의 URL 패턴 추가
     path('teams/',include('teams.urls', namespace='teams')),
     path('story_openai/', include('story_openai.urls')),
+    path('', RedirectView.as_view(url='story/', permanent=True)),
+    path('home/', include('home.urls', namespace='home')),
 ]
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
     urlpatterns += static(settings.STATIC_URL, document_root=settings.STATICFILES_DIRS)
+
+    
+

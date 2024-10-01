@@ -102,9 +102,28 @@ h1 {
 /* 보드게임 섹션 */
 .game-board {
     flex: 1;
+    /* flex: 1; */
     padding: 20px;
     text-align: center;
     border: 1px solid #ccc;
+    flex-direction: column-reverse;
+    overflow-y: auto;
+    height: 350px;
+    width: 360px;
+    display: flex;
+    align-items: center;
+}
+
+.board-row {
+    display: flex;
+}
+.space {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 80px;
+    height: 80px;
+    border: 1px solid lightgray;
 }
 
 /* 하단 네비게이션 바 */

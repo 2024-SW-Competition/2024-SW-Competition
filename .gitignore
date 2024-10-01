@@ -1,0 +1,12 @@
+# Environments
+.env
+.venv
+env/
+venv/
+ENV/
+env.bak/
+venv.bak/
+taskCheckProject/db.sqlite3/
+*.sqlite3
+db.sqlite3/
+prismatic-vim-436904-m0-598e46b5e7f6.json

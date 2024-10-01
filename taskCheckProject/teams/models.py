@@ -3,6 +3,7 @@ from django.contrib.auth.models import User
 from django.utils import timezone
 from datetime import datetime, timedelta
 
+
 # 팀 생성
 class Team(models.Model):
     name = models.CharField(max_length=100)  # 팀 이름 필드
@@ -47,3 +48,7 @@ class Invite(models.Model):
     def __str__(self):
         return self.code
 
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return self.code
