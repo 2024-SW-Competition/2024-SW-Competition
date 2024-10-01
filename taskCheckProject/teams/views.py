@@ -34,8 +34,8 @@ def create_team(request):
                 code=invite_code,
             )
 
-
             users = UserTeamProfile.objects.filter(team=team)
+            
             # 홈 생성
             Home.objects.create(
                 team=team,
