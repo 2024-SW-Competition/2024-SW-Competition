@@ -23,15 +23,16 @@
                     {% for profile in team_members_profiles %}
                         <div class="story-item">
                             <!-- 캐릭터 이미지와 팀원의 이름을 포함하는 컨테이너 -->
-                          
                             <div class="story-profile-container">
                                 <!-- 팀원들의 캐릭터 이미지 또는 업로드 이미지 표시 -->
-                                <div class="story-profile" onClick="showStory(this)" 
-                                    data-upload-img="{% if profile.upload_img and profile.is_today %}{{ profile.upload_img }}{% else %}None{% endif %}">
+                                <div class="story-profile 
+                                     {% if profile.upload_img and profile.is_today %}uploaded{% endif %}" 
+                                     onClick="handleStoryClick(this)" 
+                                     data-upload-img="{% if profile.upload_img and profile.is_today %}{{ profile.upload_img }}{% else %}None{% endif %}">
                                     <img src="{% static 'img/'|add:profile.character_image %}" 
                                          alt="character image" class="profile-img">
-                                    {% if request.user == profile.member %} <!--로그인한 사용자한테만 수정 버튼 생김-->
-                                         <button class="upload-btn" onclick="showUploadForm(event)">+</button>
+                                    {% if request.user == profile.member %} <!-- 로그인한 사용자한테만 수정 버튼 생김 -->
+                                        <button class="upload-btn" onclick="showUploadForm(event)">+</button>
                                     {% endif %}
                                 </div>
                                 <!-- 팀원의 이름 표시, 캐릭터 밑에 가까이 위치 -->
@@ -49,29 +50,68 @@
                     <form method="POST" enctype="multipart/form-data" action="{% url 'story:upload_image' team_id=team.id %}">
                         {% csrf_token %}
                         <input type="hidden" name="team_id" value="{{ team.id }}">
-                        <label for="image">이미지 업로드:</label>
+                        <label for="image">스토리 업로드</label>
                         <input type="file" id="image" name="img" accept="image/*" required>
                         <button type="submit">업로드</button>
                     </form>
                 </div>
 
                 <!-- 팝업 이미지 -->
-                <div id="story-popup" class="popup hidden">
-                    <span class="close-btn" onClick="closePopUp()">&times;</span>
-                    <img class="popup-content" id="popup-img">
+            <div id="story-popup" class="popup hidden">
+                <span class="close-btn" onClick="closePopUp()">&times;</span>
+                <img class="popup-content" id="popup-img">
 
-                    <!-- 이미지 업로드 URL 및 기타 정보를 전달 -->
-                    <button id='create-comment-btn' 
-                        data-goal="{{ team.goal }}" 
-                        data-duration="{{ team.duration }}" 
-                        data-username="{{ profile.member.username }}" 
-                        data-uploadimgurl="{{ profile.upload_img }}"
-                        onclick="createComment('{{ team.goal }}', '{{ team.duration }}', '{{ profile.member.username }}', '{{ profile.upload_img }}')">openAI 분석 결과</button>
-                    <p id="openai-comment"></p>
+                <!-- 이미지 업로드 URL 및 기타 정보를 전달 -->
+                <button id='create-comment-btn' 
+                    data-goal="{{ team.goal }}" 
+                    data-duration="{{ team.duration }}" 
+                    data-username="{{ profile.member.username }}" 
+                    data-uploadimgurl="{{ profile.upload_img }}"
+                    onclick="handleAnalysis()">스토리 분석하기
+                </button>
+
+                 <!-- 로딩 중 텍스트 -->
+                <div id="loading" style="display:none; text-align: center; margin-top: 10px;">
+                    <br>
+                    <div class="loader"></div> <!-- 로딩 스피너 추가 -->
+                    <p id="loading-text" style="font-size: 20px; font-weight: bold; color: #333; margin: 10px 0;">
+                        분석 중...
+                    </p>
                 </div>
+                <p id="openai-comment" style="display:none; font-size: 14px; font-weight: bold; color: #333; margin: 10px 0; display: inline-block;"></p>
+            </div>
+
+
             </div>
         </div>
     </div>
     <script src="{% static 'js/board.js' %}"></script>
+    <script>
+        function handleStoryClick(element) {
+        const uploadImg = element.getAttribute('data-upload-img');
+        
+        // 업로드된 이미지가 없는 경우 클릭 무시
+        if (uploadImg === "None") {
+            return;
+        }
+
+        showStory(element);
+    }
+    function handleAnalysis() {
+    // 로딩 표시
+    document.getElementById('loading').style.display = 'block'; 
+    document.getElementById('openai-comment').style.display = 'none'; 
+
+    setTimeout(() => {
+        const simulatedResult = ""; // 여기에 실제 결과를 할당
+        
+        document.getElementById('openai-comment').innerText = simulatedResult; 
+        document.getElementById('openai-comment').style.display = 'block'; 
+        document.getElementById('loading').style.display = 'none'; 
+    }, 4000); // 4초 후에 로딩을 숨김
+}
+
+    
+    </script>
 </body>
 </html>

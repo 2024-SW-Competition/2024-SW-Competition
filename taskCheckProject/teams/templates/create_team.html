@@ -38,16 +38,9 @@
                     <span>일 동안 진행돼요!</span>
                 </div>
 
-                <p>*최대 4명의 친구들과 함께할 수 있어요!*</p>
-                
-                <button type="submit" class="submit-button">목표 생성하기</button>
-            </form>
-        </div>
-    </div>
-    
                 <p>*최대 4명의 친구들과 함께할 수 있어요!*<br>
-                *분석하기를 통해 목표와 기간에 대한 조언을 받아봐요!*</p>
-                
+                    *분석하기를 통해 목표와 기간에 대한 조언을 받아봐요!*</p>
+                    
                 <button type="button" id="check-button" class="submit-button" disabled>&nbsp;분석하기&nbsp;&nbsp;</button>
                 <button type="submit" id="create-button" class="submit-button" disabled>팀 생성하기</button>
             </form>
@@ -55,8 +48,9 @@
             <!-- 로딩 중 텍스트 -->
             <div id="loading" style="display:none; text-align: center; margin-top: 10px;">
                 <br>
+                <div class="loader"></div> <!-- 로딩 스피너 추가 -->
                 <p id="loading-text" style="font-size: 20px; font-weight: bold; color: #333; margin: 10px 0;">
-                    분석 중... 
+                    분석 중...
                 </p>
             </div>
 
@@ -85,7 +79,7 @@
         const goalNameInput = document.getElementById('goal-name');
         const goalDurationInput = document.getElementById('goal-duration');
         const checkButton = document.getElementById('check-button');
-
+    
         // 입력 값이 모두 채워졌을 경우 분석하기 버튼 활성화하기
         function checkInputs() {
             if (roomNameInput.value && goalNameInput.value && goalDurationInput.value) {
@@ -94,17 +88,16 @@
                 checkButton.disabled = true;
             }
         }
-
+    
         roomNameInput.addEventListener('input', checkInputs);
         goalNameInput.addEventListener('input', checkInputs);
         goalDurationInput.addEventListener('input', checkInputs);
-
-
+    
         // OpenAI 분석하기
         document.getElementById('check-button').addEventListener('click', function() {
             const goal = document.getElementById('goal-name').value;
             const duration = document.getElementById('goal-duration').value;
-
+    
             document.getElementById('loading').style.display = 'block';
             document.getElementById('openai-comment').style.display = 'none'; 
     
@@ -115,7 +108,7 @@
                     'Content-Type': 'application/x-www-form-urlencoded',
                     'X-CSRFToken': '{{ csrf_token }}'
                 },
-                body: `goal=${goal}&duration=${duration}`
+                body: `goal=${goal}&duration=${duration}` // 여기에 backtick(`)를 추가하여 템플릿 리터럴을 사용해야 합니다.
             })
             .then(response => response.json())
             .then(data => {
@@ -129,12 +122,10 @@
             })
             .catch(error => {
                 console.error('Error:', error);
-    
                 document.getElementById('loading').style.display = 'none';
             });
         });
     </script>
-    
     
 </body>
 </html>

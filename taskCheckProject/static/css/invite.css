@@ -68,10 +68,6 @@ h2 {
     border: 1px solid #5C5C5C;
 }
 
-h3 {
-    margin-top: 100px;
-}
-
 p {
     margin-top: 100px;
     margin-bottom: 20px;
@@ -116,7 +112,7 @@ p {
 
 /* 캐릭터 선택 버튼 */
 .submit-button {
-    background-color: #0062CC;
+    background-color: #42658b;
     color: white;
     padding: 8px 30px;
     border: 1px solid #5C5C5C;

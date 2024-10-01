@@ -26,7 +26,7 @@ urlpatterns = [
 
     # 회원가입/로그인
     path('accounts/',include('accounts.urls', namespace='accounts')),
-    path('story/', include('story.urls', namespace='story')),  # story 앱의 URL 패턴 추가
+    path('story/', include('story.urls', namespace='story')),  
     path('teams/',include('teams.urls', namespace='teams')),
     path('story_openai/', include('story_openai.urls')),
     path('', RedirectView.as_view(url='story/', permanent=True)),
