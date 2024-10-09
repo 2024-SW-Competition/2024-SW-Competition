@@ -9,6 +9,18 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>목표 생성하기</title>
     <link rel="stylesheet" href="{% static 'css/create_team.css' %}">
+
+    <!-- 분석중... 글씨 애니메이션 효과 -->
+    <style>
+        @keyframes fadeInOut {
+            0%, 100% { opacity: 1; }  
+            50% { opacity: 0.3; }   
+        }
+
+        #loading-text {
+            animation: fadeInOut 1s infinite; 
+        }
+    </style>
 </head>
 <body>
     <div class="container">
@@ -16,22 +28,104 @@
             <!-- 홈으로 돌아가는 화살표 버튼 -->
             <a href="{% url 'accounts:home' %}" class="back-button" ><b><</b></a>
             <h3>어떤 목표를 이뤄볼까요?</h3>
-            
-            <form method="post">
+            <form id="goal-form" method="post">
                 {% csrf_token %}
                 <input type="text" id="room-name" name="name" class="short-input" placeholder="방 이름을 입력하세요." required>
                 <input type="text" id="goal-name" name="goal" placeholder="목표를 입력하세요." required>
-
+    
                 <div class="duration-container">
                     <input type="number" id="goal-duration" name="duration" placeholder="기간 (일)" min="1" required>
                     <span>일 동안 진행돼요!</span>
                 </div>
 
-                <p>*최대 4명의 친구들과 함께할 수 있어요!*</p>
-                
-                <button type="submit" class="submit-button">목표 생성하기</button>
+                <p>*최대 4명의 친구들과 함께할 수 있어요!*<br>
+                    *분석하기를 통해 목표와 기간에 대한 조언을 받아봐요!*</p>
+                    
+                <button type="button" id="check-button" class="submit-button" disabled>&nbsp;분석하기&nbsp;&nbsp;</button>
+                <button type="submit" id="create-button" class="submit-button" disabled>팀 생성하기</button>
             </form>
+            
+            <!-- 로딩 중 텍스트 -->
+            <div id="loading" style="display:none; text-align: center; margin-top: 10px;">
+                <br>
+                <div class="loader"></div> <!-- 로딩 스피너 추가 -->
+                <p id="loading-text" style="font-size: 20px; font-weight: bold; color: #333; margin: 10px 0;">
+                    분석 중...
+                </p>
+            </div>
+
+            <!-- 분석하기 누를경우 분석 결과 -->
+            <div id="openai-comment" style="display:none; 
+                    background-color: rgba(255, 255, 255, 0.9); /* 하얀색 배경 */
+                    border-radius: 12px; /* 둥근 모서리 */
+                    padding: 15px 20px; /* 위아래 여백을 줄이고, 좌우 여백 유지 */
+                    margin: 20px auto; /* 위아래 여백 줄임 및 수평 중앙 정렬 */
+                    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2); /* 부드러운 그림자 */
+                    max-width: 80%; 
+                    text-align: center; /* 텍스트 중앙 정렬 */
+                    transition: all 0.3s ease; 
+                    font-family: 'Helvetica Neue', sans-serif; /* 모던한 폰트 패밀리 */
+                    font-size: 20px; /* 글씨 크기 키움 */
+                    color: #333; /* 텍스트 색상 */
+                    line-height: 1.4;">
+                <h4 style="margin: 0; font-weight: 700;">분석 결과</h4> 
+                <p id="comment-text" style="font-weight: 500;"></p>
+            </div>
         </div>
     </div>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        const roomNameInput = document.getElementById('room-name');
+        const goalNameInput = document.getElementById('goal-name');
+        const goalDurationInput = document.getElementById('goal-duration');
+        const checkButton = document.getElementById('check-button');
+    
+        // 입력 값이 모두 채워졌을 경우 분석하기 버튼 활성화하기
+        function checkInputs() {
+            if (roomNameInput.value && goalNameInput.value && goalDurationInput.value) {
+                checkButton.disabled = false;
+            } else {
+                checkButton.disabled = true;
+            }
+        }
+    
+        roomNameInput.addEventListener('input', checkInputs);
+        goalNameInput.addEventListener('input', checkInputs);
+        goalDurationInput.addEventListener('input', checkInputs);
+    
+        // OpenAI 분석하기
+        document.getElementById('check-button').addEventListener('click', function() {
+            const goal = document.getElementById('goal-name').value;
+            const duration = document.getElementById('goal-duration').value;
+    
+            document.getElementById('loading').style.display = 'block';
+            document.getElementById('openai-comment').style.display = 'none'; 
+    
+            // AJAX 요청으로 OpenAI 분석 요청
+            fetch("{% url 'teams:get_openai_comment' %}", {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                    'X-CSRFToken': '{{ csrf_token }}'
+                },
+                body: `goal=${goal}&duration=${duration}` // 여기에 backtick(`)를 추가하여 템플릿 리터럴을 사용해야 합니다.
+            })
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById('comment-text').innerText = data.response;
+                document.getElementById('openai-comment').style.display = 'block';
+    
+                document.getElementById('loading').style.display = 'none';
+    
+                // 팀 생성 버튼 활성화
+                document.getElementById('create-button').disabled = false;
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                document.getElementById('loading').style.display = 'none';
+            });
+        });
+    </script>
+    
 </body>
 </html>

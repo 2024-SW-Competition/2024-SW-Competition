@@ -53,7 +53,6 @@ def join(request):
 def start(request):
     return render(request, 'start.html')
 
-
 # 로그인
 def login(request):
     if request.method=='POST':

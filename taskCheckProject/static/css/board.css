@@ -101,6 +101,7 @@ h1 {
 
 /* 보드게임 섹션 */
 .game-board {
+    flex: 1;
     /* flex: 1; */
     padding: 20px;
     text-align: center;

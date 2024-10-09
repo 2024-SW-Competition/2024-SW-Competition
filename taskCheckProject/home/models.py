@@ -1,6 +1,7 @@
 from django.db import models
 from django.utils import timezone
-from teams.models import UserTeamProfile, Team
+from django.contrib.auth.models import User
+from teams.models import Team
 
 
 # Create your models here.

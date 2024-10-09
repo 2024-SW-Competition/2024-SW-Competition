@@ -6,7 +6,6 @@ from teams.models import UserTeamProfile, Team
 from .models import Home
 from story.models import Story
 
-
 # team 정보에 맞춰 home 업데이트
 def update_home(request, team_id):
   team=get_object_or_404(Team, id=team_id)
@@ -27,13 +26,14 @@ def update_home(request, team_id):
   return None 
 
 
+
 # 보드게임판 칸 리스트 생성
 def board_view(request, team_id):
     team = get_object_or_404(Team, id=team_id)
     duration = team.duration
 
     # 행 개수 계산 (5일당 2줄)
-    rows = (duration // 5) * 2 + (1 if duration % 5 > 0 else 0)
+    rows = (duration // 5) * 2 + (1 if duration % 5 > 0 else 0) 
     columns = 4
     # 게임판 모양 2차원 배열 초기화
     board = [[-1 for _ in range(columns)] for _ in range(rows)]
@@ -68,29 +68,6 @@ def board_view(request, team_id):
         'team': team,
         'board': flipped_board,
     }
-
-  
-
-# 보드게임판 위 유저 위치 설정 -> 위에 포함시켜야
-def user_pos(request, home_id):
-  home = get_object_or_404(Home, id=home_id)
-
-  if request.method == 'POST':
-      users = UserTeamProfile.objects.filter(team=home.team)    # 팀에 속한 사용자만 선택
-
-      for user in users:
-        # story가 활성화 되면 한칸 이동
-        active_story = Story.objects.filter(user=user, is_active=True).first()
-    
-        if active_story:    
-          current_pos = user.pos
-          user.pos = current_pos + 1    # 위치 업데이트
-          user.save()
-      
-      home.save()
-
-  team_id = home.team.id
-  return redirect('home:board_view', team_id=team_id)
 
 
 # 방 종료 화면

@@ -18,4 +18,8 @@ __pychache__/
 *.pyc
 *.pyo
 
-.venv/
+# openai key
+.env
+
+# jar파일
+.jar

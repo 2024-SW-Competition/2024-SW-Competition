@@ -1,3 +1,4 @@
+# teams/views.py
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib import messages
 from .models import Invite, Team, UserTeamProfile
@@ -5,9 +6,39 @@ from .forms import CreateTeamForm, JoinTeamForm
 import random
 import string
 from home.models import Home
+from story.models import Story
 from home.views import update_home, board_view, completion
 from django.utils import timezone
+import pytz
+from datetime import datetime
 
+# openAi 관련 임포트
+import json
+from django.http import JsonResponse
+import openai
+import os
+from django.conf import settings
+
+openai.api_key=settings.OPEN_API_KEY
+
+# 기간과 목표에 대한 OpenAI의 코멘트 생성 (AJAX 요청으로 실행됨)
+def get_openai_comment(goal, duration):
+    prompt = f"사용자가 설정한 목표: '{goal}'과 목표 기간: '{duration}'일을 고려했을 때, 목표 기간이 설정한 목표에 적절한지 2줄정도로 매우짧게 조언을 해주세요."
+    response = openai.ChatCompletion.create(
+        model="gpt-3.5-turbo",
+        messages=[{"role": "user", "content": prompt}]
+    )
+    return response['choices'][0]['message']['content']
+
+
+# 팀 생성 전에 OpenAI의 코멘트 보여주기
+def get_openai_comment_view(request):
+    if request.method == 'POST':
+        goal = request.POST.get('goal')
+        duration = request.POST.get('duration')
+        comment = get_openai_comment(goal, duration)
+        return JsonResponse({'response': comment}, json_dumps_params={'ensure_ascii': False})
+    
 
 # 초대코드 생성
 def generate_invite_code():
@@ -33,8 +64,6 @@ def create_team(request):
                 duration=duration,
                 code=invite_code,
             )
-
-            users = UserTeamProfile.objects.filter(team=team)
             
             # 홈 생성
             Home.objects.create(
@@ -57,7 +86,7 @@ def create_team(request):
         form = CreateTeamForm()
     
     return render(request, 'create_team.html', {'form': form})
-
+    
 
 # 팀 조인
 def join_team(request):
@@ -130,23 +159,45 @@ def team_detail(request, team_id):
 
     if request.user not in team.members.all():
         messages.error(request, "이 팀에 접근할 권한이 없습니다.")
-        return redirect('accounts:home')  # 권한이 없는 경우 이동할 페이지
+        return redirect('accounts:home')
+
+    kst = pytz.timezone('Asia/Seoul')
+    today = datetime.now(kst).date()
 
     # 각 팀원의 UserTeamProfile 정보를 가져오기
     team_members_profiles = []
     for member in team.members.all():
         try:
             user_profile = UserTeamProfile.objects.get(user=member, team=team)
-            team_members_profiles.append({
-                'member': member,
-                'character_image': user_profile.character_image,
-                'pos': user_profile.pos
-            })
+
+            if user_profile.upload_img:
+                is_today = user_profile.upload_date == today
+                upload_img_url = user_profile.upload_img.url if user_profile.upload_img and is_today else None
+                print(f"Member: {member.username}, Upload Image URL: {upload_img_url}")
+
+                team_members_profiles.append({
+                    'member': member,
+                    'character_image': user_profile.character_image,
+                    'upload_img': upload_img_url,
+                    'is_today': is_today,
+                    'pos': user_profile.pos,
+                })
+            else:
+                team_members_profiles.append({
+                    'member': member,
+                    'character_image': user_profile.character_image,
+                    'upload_img': None,
+                    'is_today': False,
+                    'pos': user_profile.pos,
+                })
+
         except UserTeamProfile.DoesNotExist:
             team_members_profiles.append({
                 'member': member,
                 'character_image': None,
-                'pos': 0
+                'pos': 0,
+                'upload_img': None,
+                'is_today': False,
             })
 
 
@@ -164,3 +215,4 @@ def team_detail(request, team_id):
         'home': home,
         'board': board_data['board'],
     })
+

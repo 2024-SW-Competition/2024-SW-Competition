@@ -16,7 +16,7 @@
 }
 
 .login-form input:focus {
-    border-color: #007bff;
+    border-color: #42658b;
     outline: none;
 }
 
@@ -26,7 +26,7 @@
     padding: 12px;
     border: none;
     border-radius: 20px;
-    background-color: #0062CC;
+    background-color: #42658b;
     color: white;
     font-size: 16px;
     cursor: pointer;
@@ -34,7 +34,7 @@
 }
 
 .login-button:hover {
-    background-color: #0062CC;
+    opacity: 0.8;
 }
 
 /* 회원가입하러가기 스타일 */
