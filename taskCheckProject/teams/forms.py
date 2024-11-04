@@ -1,5 +1,6 @@
 from django import forms
 from .models import Team
+from story.models import Comment
 
 class CreateTeamForm(forms.ModelForm):
     class Meta:
@@ -19,3 +20,7 @@ class JoinTeamForm(forms.Form):
         cleaned_data['invite_code'] = code
 
         return cleaned_data
+class CommentForm(forms.ModelForm):
+    class Meta:
+        model = Comment  # 문자열이 아닌, 실제 모델 클래스를 사용
+        fields = ['text']
