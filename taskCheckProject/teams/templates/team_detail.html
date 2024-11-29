@@ -20,6 +20,18 @@
                 <p class="team-duration">기간: {{ team.duration }}일</p>
                 </div>    
 
+
+                <button class="open-comment-btn" id="draggable-button" onclick="openCommentPopup()">+</button>
+      
+                    <div id="comment-popup" class="popupcomment hidden" data-team-id="{{ team.id }}">
+                        <span class="close-btn" onclick="closeCommentPopup()">&times;</span>
+                        <h2>소통하기</h2>
+                        <div id="comment-popup-log" class="comment-log"></div>
+                        <textarea id="comment-popup-input" placeholder="댓글을 입력하세요"></textarea>
+                        <button onclick="submitPopupComment()">댓글 등록</button>
+                    </div>
+
+
                 <div class="story-container">
                     {% for profile in team_members_profiles %}
                         <div class="story-item">
@@ -79,7 +91,8 @@
                         분석 중...
                     </p>
                 </div>
-                <p id="openai-comment" style="display:none; font-size: 14px; font-weight: bold; color: #333; margin: 10px 0; display: inline-block;"></p>
+                <p id="openai-comment" style="font-size: 14px; font-weight: bold; color: #333; margin: 10px 0; display: none;"></p>
+
             </div>
 
             <div class="game-board">
@@ -129,6 +142,125 @@
                 document.getElementById('loading').style.display = 'none'; 
             }, 4000); // 4초 후에 로딩을 숨김
         }
+
+        function handleProfileCommentClick(profileId) {
+            loadComments(profileId);
+        }
+    
+        // 댓글 팝업 열기 함수
+    function openCommentPopup() {
+        document.getElementById("comment-popup").classList.remove("hidden");
+        loadCommentsInPopup(); // 팝업 안에 댓글 불러오기
+    }
+    
+    // 댓글 팝업 닫기 함수
+    function closeCommentPopup() {
+        document.getElementById("comment-popup").classList.add("hidden");
+    }
+    
+    // 팝업에서 댓글 불러오기
+    function loadCommentsInPopup() {
+        const teamId = document.getElementById("comment-popup").getAttribute("data-team-id");
+        fetch(`/story/comments/${teamId}/`)
+            .then(response => response.json())
+            .then(data => {
+                const commentList = document.getElementById("comment-popup-log");
+                commentList.innerHTML = ''; // 기존 댓글 초기화
+                data.comments.forEach(comment => {
+                    const newComment = document.createElement('div');
+                    newComment.innerHTML = `<strong>${comment.user__username}</strong>: ${comment.text}`;
+                    commentList.appendChild(newComment);
+                });
+            })
+            .catch(error => console.error("에러:", error));
+    }
+    
+    // 팝업에서 댓글 등록 함수
+    function submitPopupComment() {
+        const text = document.getElementById("comment-popup-input").value.trim();
+        const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+        const teamId = document.getElementById("comment-popup").getAttribute("data-team-id");
+
+        if (!text) {
+            alert('댓글 내용을 입력하세요.');
+            return;
+        }
+    
+        fetch(`/story/comments/${teamId}/create/`, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "X-CSRFToken": csrfToken
+            },
+            body: JSON.stringify({ text: text })
+        })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('댓글 등록에 실패했습니다.');
+            }
+            return response.json();
+        })
+        .then(data => {
+            console.log("댓글 등록 성공:", data);
+            document.getElementById("comment-popup-input").value = ''; // 입력창 초기화
+            loadCommentsInPopup(); // 댓글 목록 새로 고침
+        })
+        .catch(error => {
+            console.error("댓글 등록 에러:", error);
+        });
+    }
+    function loadComments(profileId, teamId) {
+        fetch(`/story/comments/?profile_id=${profileId}&team_id=${teamId}`)
+            .then(response => response.json())
+            .then(data => {
+                const commentList = document.getElementById("comment-popup-log");
+                commentList.innerHTML = ''; // 기존 댓글 초기화
+                data.comments.forEach(comment => {
+                    const newComment = document.createElement('div');
+                    newComment.innerHTML = `<strong>${comment.user__username}</strong>: ${comment.text}`;
+                    commentList.appendChild(newComment);
+                });
+            })
+            .catch(error => console.error("댓글 불러오기 에러:", error));
+    }
+    const button = document.getElementById('draggable-button');
+    let isDragging = false;
+    
+    button.addEventListener('mousedown', (e) => {
+        isDragging = true;
+        let offsetX = e.clientX - button.offsetLeft;
+        let offsetY = e.clientY - button.offsetTop;
+    
+        function onMouseMove(e) {
+            if (isDragging) {
+                button.style.left = `${e.clientX - offsetX}px`;
+                button.style.top = `${e.clientY - offsetY}px`;
+            }
+        }
+    
+        function onMouseUp() {
+            if (isDragging) {
+                isDragging = false;
+                document.removeEventListener('mousemove', onMouseMove);
+                document.removeEventListener('mouseup', onMouseUp);
+            }
+        }
+    
+        document.addEventListener('mousemove', onMouseMove);
+        document.addEventListener('mouseup', onMouseUp);
+    });
+    
+    // 클릭 이벤트와 드래그 이벤트 구분
+    button.addEventListener('click', (e) => {
+        if (!isDragging) {
+            openPopUp('comment-popup');
+        }
+    });
+    function openPopUp(popupId) {
+        document.getElementById(popupId).classList.remove("hidden");
+    }
+
     </script>
 </body>
 </html>
+

@@ -22,3 +22,12 @@ class Story(models.Model):
 
     def __str__(self):
         return f"Story by {self.user.username}"
+
+class Comment(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    text = models.TextField()
+    created_at = models.DateTimeField(auto_now_add=True)
+    team = models.ForeignKey(Team, on_delete=models.CASCADE, null=True, blank=True)  # Team 모델과의 관계 설정
+
+    def __str__(self):
+        return f"{self.user.username} - {self.text[:20]}"

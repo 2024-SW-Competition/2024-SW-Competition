@@ -1,7 +1,9 @@
 # story/views.py
+from time import localtime
+from story.models import Comment
 from django.shortcuts import render, redirect, get_object_or_404
 from .models import User, Story
-from django.http import HttpResponse
+from django.http import HttpResponse, JsonResponse
 from django.contrib.auth.decorators import login_required
 from teams.models import Team, UserTeamProfile
 from django.utils import timezone
@@ -71,6 +73,7 @@ def story_view(request, team_id):
     })
 
 def upload_image(request, team_id):
+    system_user, created = User.objects.get_or_create(username="checkmarble")
     if request.method == 'POST' and 'img' in request.FILES:
         team = get_object_or_404(Team, id=team_id)
         user_profile, created = UserTeamProfile.objects.get_or_create(user=request.user, team=team)
@@ -96,6 +99,11 @@ def upload_image(request, team_id):
             #is_today=True  # 업로드된 당일의 스토리로 표시
             match_percentage=0
         )
+        Comment.objects.create(
+            user=system_user,
+            team_id=team_id,
+            text=f"{request.user.username}님이 스토리를 업로드했습니다."
+        )
 
         # 스토리 업로드에 따른 유저 pos값 변화
         for member in team.members.all():
@@ -111,3 +119,73 @@ def upload_image(request, team_id):
     return render(request, 'team_detail.html', {
         'error': 'Invalid request',
     })
+
+from .models import Story
+from django.views.decorators.csrf import csrf_exempt
+import json
+from teams.forms import CommentForm
+
+def story_detail(request, team_id):
+    from story.models import Comment
+    story = get_object_or_404(Story, team_id=team_id)
+    comments = Comment.objects.filter(story=story).order_by('-created_at')
+
+    # HTML 폼 제출로 댓글 생성 (웹 페이지에서 직접 요청)
+    if request.method == 'POST':
+        form = CommentForm(request.POST)
+        if form.is_valid():
+            comment = form.save(commit=False)
+            comment.user = request.user  # 현재 로그인한 사용자
+            comment.story = story
+            comment.save()
+            return redirect('story_detail', team_id=team_id)
+    else:
+        form = CommentForm()
+
+    return render(
+        request, 
+        'story_detail.html', 
+        {'story': story, 'comments': comments, 'form': form}
+    )
+
+def get_comments(request, team_id):
+    from story.models import Comment
+    comments = Comment.objects.filter(team_id=team_id).values('user__username', 'text')
+    formatted_comments = []
+    for comment in comments:
+        # local_time = localtime(comment['created_at']).strftime('%p %I:%M').replace('AM', '오전').replace('PM', '오후')
+        formatted_comments.append({
+            "user__username": comment["user__username"],
+            "text": comment["text"],
+            # "timestamp": local_time,
+        })
+    return JsonResponse({"comments": formatted_comments})
+
+@csrf_exempt
+def create_comment(request, team_id):
+    if request.method == "POST":
+        data = json.loads(request.body)
+        text = data.get('text')
+        
+        if not text:
+            return JsonResponse({'error': '댓글 내용을 입력하세요.'}, status=400)
+        
+        # team_id로 Team 객체 가져오기
+        try:
+            team = Team.objects.get(id=team_id)
+        except Team.DoesNotExist:
+            return JsonResponse({'error': '유효하지 않은 팀 ID입니다.'}, status=400)
+
+        # 댓글 생성
+        comment = Comment.objects.create(
+            user=request.user,
+            text=text,
+            team=team  # team 필드에 Team 객체 저장
+        )
+        return JsonResponse({
+            'message': '댓글이 성공적으로 등록되었습니다.',
+            'username': comment.user.username,
+            'text': comment.text
+        })
+    else:
+        return JsonResponse({'error': 'POST 요청만 허용됩니다.'}, status=405)

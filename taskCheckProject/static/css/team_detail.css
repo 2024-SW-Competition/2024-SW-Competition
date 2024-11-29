@@ -171,7 +171,7 @@ body {
     border-color: #0062CC; 
 }
 
-.upload-btn {
+.upload-btn{
     position: absolute;
     top: -5px; 
     right: -5px;
@@ -188,8 +188,33 @@ body {
     align-items: center;
     font-size: 16px; 
 }
+.open-comment-btn{
+    position: absolute;
+    top: 80px; 
+    right: 90px;
+    background-color: #779FD0; 
+    color: white; 
+    border: none; 
+    border-radius: 50%; 
+    width: 23px;
+    height: 23px; 
+    cursor: pointer; 
+    transition: background-color 0.3s;
+    display: flex;
+    justify-content: center; 
+    align-items: center;
+    font-size: 16px; 
+}
 
-.upload-btn:hover {
+#comment-popup {
+    background-color: #D7E9FF;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+
+.upload-btn:hover, .open-comment-btn{
     background-color: #6084b1; 
 }
 
@@ -442,4 +467,16 @@ body {
     letter-spacing: 0.5px;
 }
 
-
+.popupcomment {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 300px;
+    background-color: #f1f1f1;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    padding: 20px;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+    z-index: 1000;
+}
